@@ -1,10 +1,11 @@
 const sql = require("mssql");
 
+
 let config = {
-    server: 'NMCPHISRV_E6',
-    database: 'ITMS',
-    user: 'sa',
-    password: '@ccp@c53rv3r',
+    server: process.env.server_name,
+    database: process.env.database_name,
+    user: process.env.user,
+    password: process.env.password,
     options: {
         cryptoCredentialsDetails: {
             minVersion: 'TLSv1'
