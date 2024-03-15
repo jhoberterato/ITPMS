@@ -3,6 +3,7 @@ const app = express()
 const cors = require("cors")
 const cookieParser = require("cookie-parser")
 const nodemailer = require('nodemailer')
+const dotenv = require("dotenv").config()
 
 /*--------------Email Sending-----------*/
 const transporter = nodemailer.createTransport({
