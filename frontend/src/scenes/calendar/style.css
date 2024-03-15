@@ -1,0 +1,33 @@
+.fc-h-event .fc-event-title{
+    font-size: 20px;
+    text-align: center !important;
+    display: block;
+}
+
+
+
+.fc-more-popover{
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Style the scrollbar */
+.fc-more-popover::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+}
+
+/* Track */
+.fc-more-popover::-webkit-scrollbar-track {
+    background: transparent; /* Make the track transparent */
+}
+
+/* Handle */
+.fc-more-popover::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3); /* Set the color of the scrollbar handle with some transparency */
+    border-radius: 4px; /* Round the corners of the handle */
+}
+
+/* Handle on hover */
+.fc-more-popover::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5); /* Change the color of the handle when hovered */
+}
