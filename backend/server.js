@@ -85,8 +85,8 @@ app.post('/api/equipment/getNotifications', equipmentController.getNotifications
 /*-------------Download-----------*/
 app.get('/api/download', downloadController.downloadFile)
 
-app.listen(4010, (err) => {
-    console.log(err ? `Error: ${err}` : "Running on port 4010") 
+app.listen(4004, (err) => {
+    console.log(err ? `Error: ${err}` : "Running on port 4004") 
     
     const sendEmail = async () => {
         const email = new emailClass()
