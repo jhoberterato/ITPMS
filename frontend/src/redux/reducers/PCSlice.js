@@ -32,7 +32,7 @@ function createData(id, ipAddress, model, user, department, area, pmDetails){
 
 const origRows = [];
 let pcList = await window.$post("pc/getPCList", {})
-
+console.log(pcList)
 pcList.data.data.map((data) => {
     origRows.push(createData(data.ID, data.IPAddress, data.Model, data.Name === null ? '' : data.Name, data.Department, data.Location, data.PMDetails))
 })

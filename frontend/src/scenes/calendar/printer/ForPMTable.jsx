@@ -30,7 +30,7 @@ function Row(props) {
         if(status === "Done"){
             const data = await window.$post("printer/printChecklist", {id: id})
             if(data.data.status === "success"){
-                window.open(`http://192.168.4.6:4004/api/download?file=${data.data.data}`, '_blank')
+                window.open(`${import.meta.env.VITE_API_URL}/download?file=${data.data.data}`, '_blank')
             }
             else{
                 dispatch(errorDialogActions.setMessage(data.data.message))

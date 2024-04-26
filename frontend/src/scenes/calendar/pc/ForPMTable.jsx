@@ -111,7 +111,7 @@ const ForPMTable = (origRows) => {
                     dispatch(errorDialogActions.setIsOpen())
                 }
                 else{
-                    window.open(`http://192.168.4.6:4004/api/download?file=${data.data.data}`, '_blank')
+                    window.open(`${import.meta.env.VITE_API_URL}/download?file=${data.data.data}`, '_blank')
                 }
                 
             }
