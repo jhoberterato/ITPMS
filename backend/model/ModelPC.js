@@ -48,6 +48,10 @@ class ModelPC extends model {
                             group by Department`
         return this.selectLimWhere(cols, condition)
     }
+
+    async import(cols, vals){
+        return this.insert(cols, vals) 
+    }
 }
 
 module.exports = ModelPC

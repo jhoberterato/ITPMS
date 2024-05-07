@@ -26,6 +26,7 @@ const index = () => {
   const [count, setCount] = useState(0)
   const [countPCPM, setCountPCPM] = useState({})
   const [countPrinterPM, setCountPrinterPM] = useState({})
+
   const formatDate = (date) => {
     const year = new Date(date).getFullYear()
     const month = String(new Date(date).getMonth() + 1).padStart(2, '0')
@@ -52,6 +53,9 @@ const index = () => {
     }
     getData()
   })
+  const handleTest = () => {
+    console.log("test")
+  }
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -66,6 +70,9 @@ const index = () => {
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",
+              '&:hover': {
+                backgroundColor: colors.blueAccent[800],
+              }
             }}
           >
             <DownloadOutlinedIcon sx={{ mr: "10px" }} />
@@ -219,7 +226,7 @@ const index = () => {
               Recent PC/Laptop PM
             </Typography>
           </Box>
-          {recentPCPM.map((transaction, i) => (
+          {recentPCPM?.length > 0 && recentPCPM.map((transaction, i) => (
             <Box
               key={i}
               display="flex"

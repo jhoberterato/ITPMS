@@ -1,5 +1,5 @@
 const pcClass = require("../classes/PCClass")
-const sign = require("./../multer")
+const { sign, pcImport } = require("./../multer")
 
 module.exports = {
     async getPCList(req, res){
@@ -100,5 +100,14 @@ module.exports = {
         let pc_class = new pcClass(req.body)
         let checklist = await pc_class.printChecklist()
         res.send(checklist)
-    }
+    },
+
+    async import(req, res){
+        pcImport(req, res, async (err) => {
+            let pc_class = new pcClass(req.body, req.file)
+            let checklist = await pc_class.import()
+            res.send(checklist)
+        })
+        
+    },
 }

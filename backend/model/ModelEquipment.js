@@ -20,7 +20,7 @@ class ModelEquipment extends model {
     async getForPCEmail(){
         const sql = `select pc.IPAddress, pc.Model, pm.PMDate, pc.Type,
                    case when pm.PMDate > GETDATE() then 'For PM' else 'Late PM' end as Status
-                   from tblPCPMSched as pm
+                   from tblPCPMSched_old as pm
                    inner join tblPC as pc on pm.PCID = pc.ID
                    where pm.PIC is null  and pm.PMDate <= DATEADD(month, 1, GETDATE())`
         return this.custom(sql)

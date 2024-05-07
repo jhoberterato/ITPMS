@@ -362,7 +362,6 @@ module.exports = class PC {
     async printChecklist(){
         let res = {}
         try{
-            console.log(this.item)
             const workbook = new ExcelJS.Workbook()
             const path = "./Template/PCPM.xlsx"
             const excel = fs.realpathSync(path, {encoding: 'utf8'})
@@ -448,6 +447,48 @@ module.exports = class PC {
             res.message = err.message
         }
 
+        return res
+    }
+
+    async import(){
+        let res = {}
+        const workbook = new ExcelJS.Workbook()
+        const path = `./imports/${this.file.originalname}`
+        const excel = fs.realpathSync(path, {encoding: 'utf8'})
+        let columns = []
+        let values = []
+        await workbook.xlsx.readFile(excel);
+        const worksheet = workbook.getWorksheet('ITPMS')
+        worksheet.eachRow({ includeEmpty: true, range: 'A1:Z1' }, (row, rowNumber) => {
+            let tempValues = []
+            if(rowNumber === 1){
+                row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+                    if(colNumber < 29){
+                        columns.push(cell.value)
+                    }
+                    
+                });
+            }
+            else{
+                tempValues = []
+                row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+                    if(colNumber < 29 && row.getCell(3).value !== null && row.getCell(3).value != ""){
+                        tempValues.push(cell.value)
+                    }
+                });
+                tempValues.length > 0 &&  values.push(tempValues)
+            }
+        });
+        console.log(columns)
+        console.log(values[values.length - 1])
+        // try{
+            
+        // }
+        // catch(err){
+        //     res.status = "error"
+        //     res.message = err.message
+        // }
+        
         return res
     }
 

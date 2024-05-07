@@ -117,7 +117,6 @@ const ForPM = () => {
                     }])
                 })
                 const data2 = await window.$post("pc/getForPMList", {date: selectedDate, location: data.data.data[0].Location, category: category})
-                
                 if(data2.data.data.length > 0){
                     let forPrintLabel = []
                     setForPMList([])

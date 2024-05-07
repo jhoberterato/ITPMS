@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes, { array } from "prop-types"
-import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TablePagination, TableHead, TableRow, Typography, Paper, useTheme, Button, InputBase, FormControl, MenuItem, Select, InputLabel } from '@mui/material'
+import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TablePagination, TableHead, TableRow, Typography, Paper, useTheme, Button, InputBase, FormControl, MenuItem, Select, InputLabel, Divider } from '@mui/material'
 import { tokens } from '../../themes';
 import { styled } from '@mui/material/styles';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import Header from '../../components/Header';
 import ModalComp from '../../components/ModalComp';
 import AddNewForm from './AddNewForm';
@@ -15,9 +17,10 @@ import DeleteDialog from '../../components/DeleteDialog';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useSelector, useDispatch } from 'react-redux';
-import { pcActions, modalActions } from '../../redux/actions';
+import { pcActions, modalActions, importPC } from '../../redux/actions';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import moment from 'moment/moment';
   
 function Row(props) {
     const { row } = props;
@@ -134,6 +137,7 @@ Row.propTypes = {
 
 const Index = () => {
     const theme = useTheme()
+    const dispatch = useDispatch()
     const colors = tokens(theme.palette.mode)
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -143,6 +147,8 @@ const Index = () => {
     const origRows = useSelector((state) => state.pc.rows)
     const modal = useSelector((state) => state.modal.editModalComp)
     const [rows, setRows] = useState(origRows)
+    const [selectedFile, setSelectedFile] = useState(null)
+    const [label, setLabel] = useState('Import Excel File')
 
     const handleFilterChange = (e) => {    
         setFilterVal(e.target.value)
@@ -154,7 +160,17 @@ const Index = () => {
         setRowsPerPage(+ e.target.value)
         setPage(0)
     }
-
+    const VisuallyHiddenInput = styled('input')({
+        clip: 'rect(0 0 0 0)',
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        whiteSpace: 'nowrap',
+        width: 1,
+    });
     const handleSearch = () => {
         setIsSearchClicked(prev => !prev)
         setRows(origRows)
@@ -186,6 +202,18 @@ const Index = () => {
         }
     }
 
+    const submitImport = (e) => {
+        e.preventDefault()
+        let formData = new FormData()
+        formData.append('file', selectedFile)
+        formData.append('name', moment().format('MMDDyyyyhhmmss'))
+        dispatch(importPC(formData))
+    }
+
+    const handleChangeForm = (e) => {
+        setSelectedFile(e.target.files[0])
+        setLabel(e.target.files[0].name)
+    }
     useEffect(() => {
         setRows(origRows)
     }, [origRows]);
@@ -195,7 +223,69 @@ const Index = () => {
             <Header title={"PC/Laptop"} subtitle={"List of pc, laptops and tablets."} />
             {modal === "edit" ? <EditModalComp title={"Edit PC/Laptop"} widthProps={'50%'}><EditForm /></EditModalComp> : <DeleteDialog><DeleteForm /></DeleteDialog>}
             <Box display={'flex'} alignItems={'stretch'} justifyContent={"space-between"}>
-                <ModalComp title={"Add New PC/Laptop"} isShow={true} buttonOpenName={"ADD"} widthProps={'50%'}><AddNewForm /></ModalComp>
+                <Box display={'flex'} justifyContent={'flex-start'} alignContent={'center'} gap={1}>
+                    <ModalComp title={"Add New PC/Laptop"} isShow={true} buttonOpenName={"ADD"} widthProps={'50%'}><AddNewForm /></ModalComp>
+                    <Paper
+                        onSubmit={submitImport}
+                        component="form"
+                        sx={{ 
+                            p: '2px 4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            width: 300,
+                            mb: '10px',
+                            background: colors.primary[400]
+                        }}
+                    >
+                        <IconButton
+                            sx={{ p: '5px' }}
+                            aria-label="menu"
+                            component="label"
+                            role={undefined}
+                            variant="contained"
+                            tabIndex={-1}
+                        >
+                            <AttachFileOutlinedIcon />
+                            <VisuallyHiddenInput 
+                                type="file"
+                                accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
+                                onChange={handleChangeForm}
+                            />
+                        </IconButton>
+                        <InputBase
+                            sx={{ ml: 1, flex: 1 }}
+                            placeholder={label}
+                            inputProps={{ 'aria-label': 'search google maps' }}
+                            readOnly
+                        />
+                        <Divider sx={{ height: 18, m: 0.5 }} orientation="vertical" />
+                        <IconButton sx={{ p: '5px' }} aria-label="directions" type='submit'>
+                            <SendOutlinedIcon />
+                        </IconButton>
+                    </Paper>
+                    {/* <Button
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        sx={{
+                            color: colors.grey[100],
+                            background: colors.greenAccent[600],
+                            mb: '10px',
+                            '&:hover': {
+                                background: colors.greenAccent[500]
+                            }
+                        }}
+                    >
+                        Import
+                        <VisuallyHiddenInput 
+                            type="file"
+                            accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
+                            onChange={(e) => dispatch(importPC(new FormData().append('file', e.target.files[0])))}
+                        />
+                    </Button> */}
+                </Box>
+                
                 <Box display={'flex'} alignItems={'stretch'} justifyContent={"space-between"}>
                     <FormControl variant='filled' sx={{width: '150px', mb: '10px'}} size='small'>
                         <InputLabel sx={{fontSize: "12px", display: filterBy === "" ? undefined : 'none'}}>Filter By</InputLabel>

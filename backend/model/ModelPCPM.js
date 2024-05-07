@@ -2,7 +2,7 @@ const model = require("./model")
 
 class ModelPCPM extends model {
     constructor(){
-        super('tblPCPMSched')
+        super('tblPCPMSched_old')
     }
 
     async getPMDetails(pcid){
@@ -39,7 +39,7 @@ class ModelPCPM extends model {
         
         let sql = `select count(*) as Count, case when pc.Location is null then '' else pc.Location end as Location
                     from tblPC as pc 
-                    inner join tblPCPMSched as pm on pc.ID = pm.PCID
+                    inner join tblPCPMSched_old as pm on pc.ID = pm.PCID
                     where pm.PMDate = '${date}' and ${condition}
                     group by Location`
         return this.custom(sql)
@@ -49,7 +49,7 @@ class ModelPCPM extends model {
         let pic = category === "Finished" ? 'not(pm.PIC is null)' : 'pm.PIC is null'
         let sql = `select pc.ID, pc.IPAddress, pc.Location, pc.Name, pm.PIC, pm.ID as PMID, case when pm.PIC is null then 'For PM' else 'Done' end as Status, pc.ModelSN, pm.NextPMDate, pc.PCName, pm.PMDate
                    from tblPC as pc 
-                   inner join tblPCPMSched as pm on pc.ID = pm.PCID
+                   inner join tblPCPMSched_old as pm on pc.ID = pm.PCID
                    where pm.PMDate = '${date}' and pc.Location = '${location}' and ${pic}`
         return this.custom(sql)
     }
@@ -60,7 +60,7 @@ class ModelPCPM extends model {
 
     async getLabelDetails(pcID, pmDate, location){
         let sql = `select pc.IPAddress, pc.PCName, pm.PMDate, pm.NextPMDate, pc.ModelSN, pc.Location, pm.PIC
-                   from tblPC as pc inner join tblPCPMSched as pm on pc.ID = pm.PCID
+                   from tblPC as pc inner join tblPCPMSched_old as pm on pc.ID = pm.PCID
                    where pc.ID = '${pcID}' and pm.PMDate = '${pmDate}' and pc.Location = '${location}'`
         return this.custom(sql)
     }
@@ -75,7 +75,7 @@ class ModelPCPM extends model {
 
     async getRecentPM(){
         let sql = `select top 10 pc.Model, pc.IPAddress, pm.PMDate, pm.PIC
-                   from tblPC as pc inner join tblPCPMSched as pm
+                   from tblPC as pc inner join tblPCPMSched_old as pm
                    on pc.ID = pm.PCID
                    where not(pm.PIC is null)
                    order by pm.ID desc
@@ -94,7 +94,7 @@ class ModelPCPM extends model {
     async getForCheckListDetails(condition){
         let sql = `
             select pm.*, pc.IPAddress, pc.Name, pc.EmpID
-            from tblPCPMSched as pm inner join tblPC as pc on pm.PCID = pc.ID
+            from tblPCPMSched_old as pm inner join tblPC as pc on pm.PCID = pc.ID
             where ${condition}
         `
         return this.custom(sql)

@@ -49,35 +49,40 @@ const getColor = (status) => {
 }
 let temp = []
 const data = await window.$post("pc/getAllPMSchedule", {})
-data.data.data.map((d, i) => {
-    const year = new Date(d.PMDate).getFullYear()
-    const month = String(new Date(d.PMDate).getMonth() + 1).padStart(2, '0')
-    const day = String(new Date(d.PMDate).getDate()).padStart(2, '0')
-    temp.push({
-        id: i,
-        title: d.Count,
-        groupId: d.Category,
-        date: `${year}-${month}-${day}`,
-        backgroundColor: d.Category === "For PM" ? getColor("For PM").bg : getColor("Late PM").bg,
-        borderColor: d.Category === "For PM" ? getColor("For PM").bd : getColor("Late PM").bd,
-    })
-});
+if(data.data.data.length > 0){
+    data.data.data.map((d, i) => {
+        const year = new Date(d.PMDate).getFullYear()
+        const month = String(new Date(d.PMDate).getMonth() + 1).padStart(2, '0')
+        const day = String(new Date(d.PMDate).getDate()).padStart(2, '0')
+        temp.push({
+            id: i,
+            title: d.Count,
+            groupId: d.Category,
+            date: `${year}-${month}-${day}`,
+            backgroundColor: d.Category === "For PM" ? getColor("For PM").bg : getColor("Late PM").bg,
+            borderColor: d.Category === "For PM" ? getColor("For PM").bd : getColor("Late PM").bd,
+        })
+    });
+}
 
 let temp2 = []
 const data2 = await window.$post("pc/getFinishedPM", {})
-data2.data.data.map((d, i) => {
-    const year = new Date(d.PMDate).getFullYear()
-    const month = String(new Date(d.PMDate).getMonth() + 1).padStart(2, '0')
-    const day = String(new Date(d.PMDate).getDate()).padStart(2, '0')
-    temp2.push({
-        id: i,
-        title: d.Count,
-        groupId: d.Category,
-        date: `${year}-${month}-${day}`,
-        backgroundColor: getColor(d.Category).bg,
-        borderColor: getColor(d.Category).bd,
+if(data2.data.data.length > 0){
+    data2.data.data.map((d, i) => {
+        const year = new Date(d.PMDate).getFullYear()
+        const month = String(new Date(d.PMDate).getMonth() + 1).padStart(2, '0')
+        const day = String(new Date(d.PMDate).getDate()).padStart(2, '0')
+        temp2.push({
+            id: i,
+            title: d.Count,
+            groupId: d.Category,
+            date: `${year}-${month}-${day}`,
+            backgroundColor: getColor(d.Category).bg,
+            borderColor: getColor(d.Category).bd,
+        })
     })
-})
+}
+
 
 let temp3 = []
 const data3 = await window.$post("printer/getAllPMSchedule", {})

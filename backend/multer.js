@@ -10,6 +10,16 @@ const signatureAttachment = multer.diskStorage({
     }
 })
 
-let sign = multer({storage: signatureAttachment}).single("file")
+const importPC = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './imports')
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname)
+    }
+})
 
-module.exports = sign
+let sign = multer({storage: signatureAttachment}).single("file")
+let pcImport = multer({storage: importPC}).single("file")
+
+module.exports = { sign, pcImport}
