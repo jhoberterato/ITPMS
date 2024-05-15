@@ -225,7 +225,7 @@ const Index = () => {
             <Box display={'flex'} alignItems={'stretch'} justifyContent={"space-between"}>
                 <Box display={'flex'} justifyContent={'flex-start'} alignContent={'center'} gap={1}>
                     <ModalComp title={"Add New PC/Laptop"} isShow={true} buttonOpenName={"ADD"} widthProps={'50%'}><AddNewForm /></ModalComp>
-                    <Paper
+                    {/* <Paper
                         onSubmit={submitImport}
                         component="form"
                         sx={{ 
@@ -262,7 +262,7 @@ const Index = () => {
                         <IconButton sx={{ p: '5px' }} aria-label="directions" type='submit'>
                             <SendOutlinedIcon />
                         </IconButton>
-                    </Paper>
+                    </Paper> */}
                     {/* <Button
                         component="label"
                         role={undefined}

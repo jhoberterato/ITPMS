@@ -1,6 +1,7 @@
 const { rows } = require("mssql")
 const pc_model = require("../model/ModelPC")
 const pm_model = require("../model/ModelPCPM")
+const equipment_model = require('../model/Equipments')
 const ExcelJS = require("exceljs")
 const fs = require("fs")
 const { resolve } = require("path")
@@ -9,6 +10,7 @@ module.exports = class PC {
     constructor(item, file){
         this.pc = new pc_model()
         this.pm = new pm_model()
+        this.equipment = new equipment_model()
         this.item = item
         this.file = file
         this.workbook = new ExcelJS.Workbook()
@@ -466,7 +468,6 @@ module.exports = class PC {
                     if(colNumber < 29){
                         columns.push(cell.value)
                     }
-                    
                 });
             }
             else{
@@ -479,8 +480,25 @@ module.exports = class PC {
                 tempValues.length > 0 &&  values.push(tempValues)
             }
         });
-        console.log(columns)
-        console.log(values[values.length - 1])
+
+        columns = columns.filter((item) => {
+            return item !== "ForPM" && item !== null
+        })
+
+        values = values.filter((item) => {
+            return item.length !== columns.length
+        })
+        
+        values.map((val) => {
+            let newVal = val.map((val) => {
+                return val === null ? '' : val
+            })
+
+            return newVal
+        })
+
+        values.map((val) => this.equipment.import(columns, val))
+        console.log("ayos na!")
         // try{
             
         // }
